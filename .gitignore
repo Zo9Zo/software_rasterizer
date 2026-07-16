@@ -1,0 +1,13 @@
+.cache
+.idea
+build/
+bin/
+
+.vscode/
+.vs/
+out/
+
+*.exe
+*.obj
+*.o
+*.pdb
