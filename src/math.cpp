@@ -1,6 +1,7 @@
 #include "math.hpp"
 
 #include <array>
+#include <cmath>
 
 float Math4D::Matrix4x4::operator[](int i) const {
     return this->data_[i];
@@ -16,6 +17,41 @@ float Math4D::Vector4::operator[](int i) const {
 
 float& Math4D::Vector4::operator[](int i) {
     return this->data_[i];
+}
+
+Math4D::Vector4 Math4D::Vector4::operator*(float a) {
+    Vector4 result = *this;
+    for (int i = 0; i < 4; ++i) {
+        result[i] *= a;
+    }
+    return result;
+}
+
+Math4D::Vector4& Math4D::Vector4::operator+=(const Vector4& other) {
+    for (int i = 0; i < 4; ++i) {
+        (*this)[i] += other[i];
+    }
+    return *this;
+}
+
+Math4D::Vector4& Math4D::Vector4::operator/=(float a) {
+    const float inv_a = 1.0f / a;
+    for (int i = 0; i < 4; ++i) {
+        data_[i] *= inv_a;
+    }
+    return *this;
+}
+
+float Math4D::Vector4::Magnitude() const {
+    float sqr_magnitude = 0.0f;
+    for (int i = 0; i < 4; ++i) {
+        sqr_magnitude += data_[i] * data_[i];
+    }
+    return std::sqrt(sqr_magnitude);
+}
+
+void Math4D::Vector4::Normalize() {
+    *this /= this->Magnitude();
 }
 
 Math4D::Vector4 Math4D::operator*(const Matrix4x4& mat, const Vector4& vec) {
@@ -40,12 +76,4 @@ Math4D::Matrix4x4 Math4D::operator*(const Matrix4x4& mat1, const Matrix4x4& mat2
         }
     }
     return result;
-}
-
-Math4D::Vector4& Math4D::Vector4::operator/=(float a) {
-    const float inv_a = 1.0f / a;
-    for (int i = 0; i < 4; ++i) {
-        data_[i] *= inv_a;
-    }
-    return *this;
 }

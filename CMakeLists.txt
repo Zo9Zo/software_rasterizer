@@ -11,7 +11,12 @@ FetchContent_Declare(SFML
     EXCLUDE_FROM_ALL
     SYSTEM)
 
-FetchContent_MakeAvailable(SFML)
+FetchContent_Declare(spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.12.0
+)
+
+FetchContent_MakeAvailable(SFML spdlog)
 
 add_executable(main src/main.cpp)
 target_sources(main PRIVATE
@@ -31,8 +36,8 @@ target_sources(main PRIVATE
     include/image.hpp
 )
 target_include_directories(main PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_compile_features(main PRIVATE cxx_std_17)
+target_compile_features(main PRIVATE cxx_std_20)
 target_compile_definitions(main PRIVATE _USE_MATH_DEFINES)
-target_link_libraries(main PRIVATE SFML::Graphics)
+target_link_libraries(main PRIVATE SFML::Graphics spdlog::spdlog)
 
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT main)

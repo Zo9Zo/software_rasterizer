@@ -45,6 +45,54 @@ std::array<float, 3> Camera::GetPosition() const {
     return position_;
 }
 
+void Camera::Move(const Math4D::Vector4& relative_direction) {
+    const Math4D::Matrix4x4 camera_matrix = {{right_[0], forward_[0], up_[0], 0.0f,
+                                              right_[1], forward_[1], up_[1], 0.0f,
+                                              right_[2], forward_[2], up_[2], 0.0f,
+                                              0.0f, 0.0f, 0.0f, 1.0f}};
+    const Math4D::Vector4 direction = camera_matrix * relative_direction;
+    for (int i = 0; i < 3; ++i) {
+        position_[i] += direction[i];
+    }
+}
+
+void Camera::LookAt(const Math4D::Vector4& relative_target_position) {
+    if (std::abs(relative_target_position[0]) < 1e-5f && std::abs(relative_target_position[2]) < 1e-5f) {
+        return;
+    }
+    const Math4D::Matrix4x4 camera_matrix = {{right_[0], forward_[0], up_[0], -position_[0],
+                                              right_[1], forward_[1], up_[1], -position_[1],
+                                              right_[2], forward_[2], up_[2], -position_[2],
+                                              0.0f, 0.0f, 0.0f, 1.0f}};
+    const Math4D::Vector4 target_direction = camera_matrix * relative_target_position;
+    float forward_inv_mag = 0.0f;
+    for (int i = 0; i < 3; ++i) {
+        forward_[i] = target_direction[i];
+        forward_inv_mag += forward_[i] * forward_[i];
+    }
+    forward_inv_mag = 1.0f / std::sqrt(forward_inv_mag);
+    for (int i = 0; i < 3; ++i) {
+        forward_[i] *= forward_inv_mag;
+    }
+    if (std::abs(forward_[0]) < 1e-5f && std::abs(forward_[1]) < 1e-5f) {
+        right_ = {1, 0, 0};
+    } else {
+        const float right_inv_mag = 1.0f / std::sqrt(forward_[0] * forward_[0] + forward_[1] * forward_[1]);
+        right_ = {forward_[1] * right_inv_mag, -forward_[0] * right_inv_mag, 0};
+    }
+    up_ = {right_[1] * forward_[2] - right_[2] * forward_[1],
+           right_[2] * forward_[0] - right_[0] * forward_[2],
+           right_[0] * forward_[1] - right_[1] * forward_[0]};
+    float up_inv_mag = 0.0f;
+    for (int i = 0; i < 3; ++i) {
+        up_inv_mag += up_[i] * up_[i];
+    }
+    up_inv_mag = 1.0f / std::sqrt(up_inv_mag);
+    for (int i = 0; i < 3; ++i) {
+        up_[i] *= up_inv_mag;
+    }
+}
+
 std::array<float, 2> PixelToNormal(const std::array<int, 2>& pixel) {
     std::array<float, 2> result;
     result[0] = 2.0f * pixel[0] / config::window_size.x - 1.0f;

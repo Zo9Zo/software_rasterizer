@@ -1,6 +1,7 @@
 #pragma once
 
 #include "geometry.hpp"
+#include "math.hpp"
 
 #include <array>
 #include <optional>
@@ -17,6 +18,10 @@ class Camera {
     std::array<float, 3> GetUp() const;
     
     std::array<float, 3> GetPosition() const;
+
+    void Move(const Math4D::Vector4& relative_direction);
+    
+    void LookAt(const Math4D::Vector4& relative_target_position);
 
    private:
     std::array<float, 3> forward_;

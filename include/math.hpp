@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <compare>
 
 namespace Math4D {
     class Matrix4x4 {
@@ -44,8 +45,18 @@ namespace Math4D {
         float operator[](int i) const;
             
         float& operator[](int i);
+
+        Vector4 operator*(float a);
+
+        Vector4& operator+=(const Vector4& other);
         
         Vector4& operator/=(float a);
+        
+        auto operator<=>(const Vector4&) const = default;
+
+        float Magnitude() const;
+
+        void Normalize();
 
        private:
         std::array<float, 4> data_;
@@ -56,7 +67,7 @@ namespace Math4D {
     Matrix4x4 operator*(const Matrix4x4& mat1, const Matrix4x4& mat2);
 
     inline constexpr Matrix4x4 Identity = Matrix4x4({1.0f, 0.0f, 0.0f, 0.0f,
-                                            0.0f, 1.0f, 0.0f, 0.0f,
-                                            0.0f, 0.0f, 1.0f, 0.0f,
-                                            0.0f, 0.0f, 0.0f, 1.0f});
+                                                     0.0f, 1.0f, 0.0f, 0.0f,
+                                                     0.0f, 0.0f, 1.0f, 0.0f,
+                                                     0.0f, 0.0f, 0.0f, 1.0f});
 }

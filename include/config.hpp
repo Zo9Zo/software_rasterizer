@@ -11,4 +11,5 @@ namespace config {
     inline constexpr float far_plane_distance = 100.0f;
     inline constexpr float aspect_ratio = 3.0f;
     inline constexpr sf::Angle fov = sf::degrees(90.0f);
+    inline constexpr float movement_speed = 10.0f;
 };
