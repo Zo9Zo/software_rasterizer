@@ -46,7 +46,11 @@ namespace Math4D {
             
         float& operator[](int i);
 
-        Vector4 operator*(float a);
+        Vector4 operator*(float a) const;
+
+        Vector4 operator+(const Vector4& other) const;
+        
+        Vector4 operator-(const Vector4& other) const;
 
         Vector4& operator+=(const Vector4& other);
         
@@ -61,6 +65,8 @@ namespace Math4D {
        private:
         std::array<float, 4> data_;
     };
+
+    Vector4 Lerp(const Vector4& v1, const Vector4& v2, float t);
 
     Vector4 operator*(const Matrix4x4& mat, const Vector4& vec);
     

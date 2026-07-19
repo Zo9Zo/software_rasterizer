@@ -9,4 +9,6 @@ Math4D::Matrix4x4 GetWorldToViewMatrix(const Camera& camera);
 
 Math4D::Matrix4x4 GetViewToProjectionMatrix();
 
-std::optional<Math4D::Vector4> GetNDC(const Camera& camera, const Math4D::Vector4& model_position);
+Math4D::Vector4 GetClipPosition(const Camera& camera, const Math4D::Vector4& model_position);
+
+Math4D::Vector4 GetNDC(const Math4D::Vector4& clip_position);

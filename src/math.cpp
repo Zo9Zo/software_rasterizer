@@ -19,12 +19,28 @@ float& Math4D::Vector4::operator[](int i) {
     return this->data_[i];
 }
 
-Math4D::Vector4 Math4D::Vector4::operator*(float a) {
+Math4D::Vector4 Math4D::Vector4::operator*(float a) const {
     Vector4 result = *this;
     for (int i = 0; i < 4; ++i) {
         result[i] *= a;
     }
     return result;
+}
+
+Math4D::Vector4 Math4D::Vector4::operator+(const Math4D::Vector4& other) const {
+    Vector4 result = *this;
+    result += other;
+    return result;
+}
+
+Math4D::Vector4 Math4D::Vector4::operator-(const Math4D::Vector4& other) const {
+    Vector4 result = *this;
+    result += other * (-1.0f);
+    return result;
+}
+
+Math4D::Vector4 Math4D::Lerp(const Math4D::Vector4& v1, const Math4D::Vector4& v2, float t) {
+    return v1 + (v2 - v1) * t;
 }
 
 Math4D::Vector4& Math4D::Vector4::operator+=(const Vector4& other) {

@@ -46,25 +46,13 @@ Math4D::Matrix4x4 GetMVPMatrix(const Camera& camera) {
     return GetViewToProjectionMatrix() * GetWorldToViewMatrix(camera) * GetModelToWorldMatrix();
 }
 
-std::optional<Math4D::Vector4> GetClipPosition(const Camera& camera, const Math4D::Vector4& model_position) {
-    Math4D::Vector4 clip_position = GetMVPMatrix(camera) * model_position;
-    if (clip_position[3] <= 1e-5f) {
-        return std::nullopt;
-    }
-    for (int i = 0; i < 3; ++i) {
-        if (std::abs(clip_position[i]) > clip_position[3]) {
-            return std::nullopt;
-        }
-    }
-    return clip_position;
+Math4D::Vector4 GetClipPosition(const Camera& camera, const Math4D::Vector4& model_position) {
+    return GetMVPMatrix(camera) * model_position;
 }
 
-std::optional<Math4D::Vector4> GetNDC(const Camera& camera, const Math4D::Vector4& model_position) {
-    std::optional<Math4D::Vector4> clip_position = GetClipPosition(camera, model_position);
-    if (!clip_position.has_value()) {
-        return std::nullopt;
-    }
-    const float w = clip_position.value()[3];
-    clip_position.value() /= w;
-    return clip_position;
+Math4D::Vector4 GetNDC(const Math4D::Vector4& clip_position) {
+    Math4D::Vector4 result = clip_position;
+    const float w = result[3];
+    result /= w;
+    return result;
 }
